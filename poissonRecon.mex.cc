@@ -54,7 +54,7 @@ void mexFunction(int nargout, mxArray *out[], int nargin, const mxArray *in[]) {
   if (samples_per_node < 1 || samples_per_node > 500) {
     ERR_EXIT("InputSizeError", "samplesPerNode must be in [1, 500]");
   }
-  if (full_depth < 0 || full_depth > 20) {
+  if (cg_depth < 0 || cg_depth > 20) {
     ERR_EXIT("InputSizeError", "cgDepth must be in [0, 20]");
   }
 
