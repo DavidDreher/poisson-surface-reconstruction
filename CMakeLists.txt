@@ -36,15 +36,33 @@ else()
     set(MEX_BUILD_FLAGS -O -v -DNDEBUG -DRELEASE)
 endif()
 
-add_custom_command(
-    OUTPUT ${MEX_OUTPUT_DIR}/${MEX_OUTPUT_FILENAME}
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    DEPENDS poisson_recon
-    COMMAND ${MATLAB_MEX_EXECUTABLE}
-    poissonRecon.mex.cc -lpoisson_recon
-    LDFLAGS=\"\\$$LDFLAGS ${OpenMP_CXX_FLAGS} -std=c++0x\"
-    CXXFLAGS=\"\\$$CXXFLAGS ${OpenMP_CXX_FLAGS} -std=c++0x\"
-    -largeArrayDims -cxx
-    -outdir ${MEX_OUTPUT_DIR} -output ${MEX_OUTPUT_FILENAME}
-    -L${LIBRARY_OUTPUT_PATH} ${MEX_BUILD_FLAGS}
-)
+if(UNIX AND NOT APPLE)
+    add_custom_command(
+        OUTPUT ${MEX_OUTPUT_DIR}/${MEX_OUTPUT_FILENAME}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        DEPENDS poisson_recon
+        COMMAND ${MATLAB_MEX_EXECUTABLE}
+        poissonRecon.mex.cc -lpoisson_recon
+        LDFLAGS=\"\\$$LDFLAGS ${OpenMP_CXX_FLAGS} -std=c++0x\"
+        CXXFLAGS=\"\\$$CXXFLAGS ${OpenMP_CXX_FLAGS} -std=c++0x\"
+        -largeArrayDims -cxx
+        -outdir ${MEX_OUTPUT_DIR} -output ${MEX_OUTPUT_FILENAME}
+        -L${LIBRARY_OUTPUT_PATH} ${MEX_BUILD_FLAGS}
+        GCC=${CMAKE_C_COMPILER}
+    )
+else()
+
+    add_custom_command(
+        OUTPUT ${MEX_OUTPUT_DIR}/${MEX_OUTPUT_FILENAME}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        DEPENDS poisson_recon
+        COMMAND ${MATLAB_MEX_EXECUTABLE}
+        poissonRecon.mex.cc -lpoisson_recon
+        LDFLAGS=\"\\$$LDFLAGS ${OpenMP_CXX_FLAGS} -std=c++0x\"
+        CXXFLAGS=\"\\$$CXXFLAGS ${OpenMP_CXX_FLAGS} -std=c++0x\"
+        -largeArrayDims -cxx
+        -outdir ${MEX_OUTPUT_DIR} -output ${MEX_OUTPUT_FILENAME}
+        -L${LIBRARY_OUTPUT_PATH} ${MEX_BUILD_FLAGS}
+    )
+
+endif()
